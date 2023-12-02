@@ -68,10 +68,13 @@ void setup() {
   shifter();
 
   thumb.write(170);
+  delay(200);
   pointer.write(170);
+  delay(200);
   middle.write(10);
+  delay(200);
   pair.write(10);
-  delay(500);
+  delay(200);
   thumb.detach();
   pointer.detach();
   middle.detach();
