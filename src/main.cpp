@@ -2,11 +2,6 @@
 #include <avr/pgmspace.h>
 #include <Servo.h>
 
-const uint8_t S0 = 10;
-const uint8_t S1 = 11;
-const uint8_t S2 = 12;
-const uint8_t SIG_pin = 13;
-
 #define s0 10
 #define s1 11
 #define s2 12
@@ -43,14 +38,16 @@ void shifter();
 
 void setup() {
 
+  Serial.begin(9600);
+
   //Set POT and Mux pin to input
   pinMode(pot, INPUT);
   pinMode(SIG_pin, INPUT);
 
   //Set mux pins to output
-  pinMode(S0, OUTPUT);
-  pinMode(S1, OUTPUT);
-  pinMode(S2, OUTPUT);
+  pinMode(s0, OUTPUT);
+  pinMode(s1, OUTPUT);
+  pinMode(s2, OUTPUT);
 
   //Set shift register pins to output
   pinMode(latch, OUTPUT);
@@ -64,15 +61,32 @@ void setup() {
   middle.attach(4);
   pair.attach(5);
 
+  digitalWrite(clear, LOW);
+  digitalWrite(clear, HIGH);
+
+  LED_byte = pgm_read_byte(&fingerLED[0]);
+  shifter();
+
+  thumb.write(170);
+  pointer.write(170);
+  middle.write(10);
+  pair.write(10);
+  delay(500);
+  thumb.detach();
+  pointer.detach();
+  middle.detach();
+  pair.detach();
+
+
 }
 
 void loop() {
   randomSeed(millis());
 
   for (byte idx = 0; idx < 8; idx++){
-    digitalWrite(S0, HIGH && (idx & B00000001));
-    digitalWrite(S1, HIGH && (idx & B00000010));
-    digitalWrite(S2, HIGH && (idx & B00000100));
+    digitalWrite(s0, HIGH && (idx & B00000001));
+    digitalWrite(s1, HIGH && (idx & B00000010));
+    digitalWrite(s2, HIGH && (idx & B00000100));
     channels[idx] = digitalRead(SIG_pin);
     if (channels[idx] == HIGH){
       updateSystem(idx);
@@ -81,28 +95,37 @@ void loop() {
   }
 
   if (mode == Control){
-    byte val = analogRead(pot);
+    int val = analogRead(pot);
+    Serial.println(val);
     byte angle = 0;
     switch (finger){
       case Thumb:
         angle = map(val, 0, 1023, 170, 10);
+        thumb.attach(2);
         thumb.write(angle);
-        delay(500);
+        delay(200);
+        thumb.detach();
         break;
       case Pointer:
         angle = map(val, 0, 1023, 170, 10);
+        pointer.attach(3);
         pointer.write(angle);
-        delay(500);
+        delay(200);
+        pointer.detach();
         break;
       case Middle:
         angle = map(val, 0, 1023, 10, 170);
+        middle.attach(4);
         middle.write(angle);
-        delay(500);
+        delay(200);
+        middle.detach();
         break;
       case Pair:
         angle = map(val, 0, 1023, 10, 170);
+        pair.attach(5);
         pair.write(angle);
-        delay(500);
+        delay(200);
+        pair.detach();
         break;
     }
   }
@@ -116,39 +139,78 @@ void loop() {
 void gameMove(){
   switch (choice){
     case Rock:
+      pair.attach(5);
+      middle.attach(4);
+      pointer.attach(3);
+      thumb.attach(2);
+
       pair.write(170);
+      delay(200);
       middle.write(170);
+      delay(200);
       pointer.write(10);
+      delay(200);
       thumb.write(10);
       delay(3000);
       thumb.write(170);
+      delay(200);
       pointer.write(170);
+      delay(200);
       middle.write(10);
+      delay(200);
       pair.write(10);
       delay(1000);
+      thumb.detach();
+      pointer.detach();
+      middle.detach();
+      pair.detach();
+
       break;
     case Paper:
+      pointer.attach(3);
+
       pointer.write(90);
-      thumb.write(90);
       delay(500);
-      thumb.write(170);
       pointer.write(170);
       delay(2000);
+
+      pointer.detach();
       break;
     case Scissors:
+      pair.attach(5);
+      thumb.attach(2);
+
       pair.write(170);
+      delay(200);
       thumb.write(10);
       delay(3000);
       thumb.write(170);
+      delay(200);
       pair.write(10);
       delay(1000);
+
+      thumb.detach();
+      pair.detach();
       break;
     case Reset:
+      thumb.attach(2);
+      pointer.attach(3);
+      middle.attach(4);
+      pair.attach(5);
+
       thumb.write(170);
+      delay(200);
       pointer.write(170);
+      delay(200);
       middle.write(10);
+      delay(200);
       pair.write(10);
       delay(1000);
+
+      thumb.detach();
+      pointer.detach();
+      middle.detach();
+      pair.detach();
       break;
   }
 }
