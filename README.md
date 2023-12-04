@@ -1,6 +1,6 @@
 # Prosthetic-Hand-Game
 
-This project consists of three main components: the mechanical, electrical and software designs of an articulating hand that plays Rock-Paper-Scissors with the user. The hand also has the built-in functionality to control the fingers individually (the ring and pinky finger move together).
+This project consists of the mechanical design, electrical design, software design, and using the system of an articulating hand that plays Rock-Paper-Scissors with the user. The hand also has the built-in functionality to control the fingers individually (the ring and pinky finger move together). This was designed around an interest in robotic prosthetics and exoskeletons. 
 
 <img src="images/Final.jpg">
 
