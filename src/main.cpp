@@ -24,6 +24,7 @@ typedef enum{Thumb, Pointer, Middle, Pair}fingerSelect;
 // four servo objects to control thumb, pointer, middle, and ring/pink fingers
 Servo thumb, pointer, middle, pair;
 
+// define byte string for LED outputs {Game, Control Thumb, Control Pointer, Control Middle, Control Pair}
 const byte PROGMEM fingerLED[5] = {0b10000000, 0b01100000, 0b01010000, 0b01001000, 0b01000100};
 byte LED_byte;
 
@@ -61,12 +62,13 @@ void setup() {
   middle.attach(4);
   pair.attach(5);
 
+  // initialize clear shift register and set LEDs to Game
   digitalWrite(clear, LOW);
   digitalWrite(clear, HIGH);
-
   LED_byte = pgm_read_byte(&fingerLED[0]);
   shifter();
 
+  // initialize servos to default position
   thumb.write(170);
   delay(200);
   pointer.write(170);
@@ -86,6 +88,7 @@ void setup() {
 void loop() {
   randomSeed(millis());
 
+  // read all buttons 
   for (byte idx = 0; idx < 8; idx++){
     digitalWrite(s0, HIGH && (idx & B00000001));
     digitalWrite(s1, HIGH && (idx & B00000010));
@@ -97,6 +100,7 @@ void loop() {
     }
   }
 
+  // read potentiometer and control servos when in Control mode
   if (mode == Control){
     int val = analogRead(pot);
     Serial.println(val);
@@ -135,10 +139,12 @@ void loop() {
 
 }
 
-// thumb (170 erect / 10 bent)
-// pointer (170 erect / 10 bent)
-// middle (10 erect / 170 bent)
-// pair (10 erect / 170 bent)
+//  thumb:   (170 erect / 10 bent)
+//  pointer: (170 erect / 10 bent)
+//  middle:  (10 erect / 170 bent)
+//  pair:    (10 erect / 170 bent) 
+
+//define servo positions for each game choice
 void gameMove(){
   switch (choice){
     case Rock:
@@ -218,6 +224,7 @@ void gameMove(){
   }
 }
 
+// update system based on button presses
 void updateSystem(byte idx){
   switch (idx){
     case 0:
@@ -279,6 +286,7 @@ void updateSystem(byte idx){
   }
 }
 
+// change shift register output based on defined byte string
 void shifter(){
   digitalWrite(latch, LOW);
   shiftOut(data, clock, LSBFIRST, LED_byte);
