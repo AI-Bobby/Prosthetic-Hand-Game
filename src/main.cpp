@@ -90,6 +90,7 @@ void loop() {
 
   // read all buttons 
   for (byte idx = 0; idx < 8; idx++){
+    // set mux to read each button for HIGH and LOW through bitwise AND
     digitalWrite(s0, HIGH && (idx & B00000001));
     digitalWrite(s1, HIGH && (idx & B00000010));
     digitalWrite(s2, HIGH && (idx & B00000100));
