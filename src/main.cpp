@@ -111,28 +111,28 @@ void loop() {
         angle = map(val, 0, 1023, 170, 10);
         thumb.attach(2);
         thumb.write(angle);
-        delay(200);
+        delay(50);
         thumb.detach();
         break;
       case Pointer:
         angle = map(val, 0, 1023, 170, 10);
         pointer.attach(3);
         pointer.write(angle);
-        delay(200);
+        delay(50);
         pointer.detach();
         break;
       case Middle:
         angle = map(val, 0, 1023, 10, 170);
         middle.attach(4);
         middle.write(angle);
-        delay(200);
+        delay(50);
         middle.detach();
         break;
       case Pair:
         angle = map(val, 0, 1023, 10, 170);
         pair.attach(5);
         pair.write(angle);
-        delay(200);
+        delay(50);
         pair.detach();
         break;
     }
@@ -161,7 +161,7 @@ void gameMove(){
       pointer.write(10);
       delay(200);
       thumb.write(10);
-      delay(3000);
+      delay(2000);
       thumb.write(170);
       delay(200);
       pointer.write(170);
@@ -169,7 +169,8 @@ void gameMove(){
       middle.write(10);
       delay(200);
       pair.write(10);
-      delay(1000);
+      delay(500);
+
       thumb.detach();
       pointer.detach();
       middle.detach();
@@ -177,14 +178,14 @@ void gameMove(){
 
       break;
     case Paper:
-      pointer.attach(3);
+      thumb.attach(2);
 
-      pointer.write(90);
-      delay(500);
-      pointer.write(170);
+      thumb.write(10);
       delay(2000);
+      thumb.write(170);
+      delay(500);
 
-      pointer.detach();
+      thumb.detach();
       break;
     case Scissors:
       pair.attach(5);
@@ -197,7 +198,7 @@ void gameMove(){
       thumb.write(170);
       delay(200);
       pair.write(10);
-      delay(1000);
+      delay(500);
 
       thumb.detach();
       pair.detach();
@@ -215,7 +216,7 @@ void gameMove(){
       middle.write(10);
       delay(200);
       pair.write(10);
-      delay(1000);
+      delay(500);
 
       thumb.detach();
       pointer.detach();
