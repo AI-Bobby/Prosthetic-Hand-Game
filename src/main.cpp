@@ -233,6 +233,7 @@ void updateSystem(byte idx){
       if (mode == Game){
         mode = Control;
         LED_byte = pgm_read_byte(&fingerLED[1]);
+        finger = Thumb;
         shifter();
       }
       else{
